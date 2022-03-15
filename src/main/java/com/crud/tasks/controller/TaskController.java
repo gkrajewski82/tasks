@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class TaskController {
     @GetMapping(value = "{taskId}")
     public ResponseEntity<TaskDto> getTask(@PathVariable Long taskId) throws TaskNotFoundException {
             return ResponseEntity.ok(taskMapper.mapToTaskDto(service.getTask(taskId)));
-        }
+    }
 
     @DeleteMapping(value = "{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
