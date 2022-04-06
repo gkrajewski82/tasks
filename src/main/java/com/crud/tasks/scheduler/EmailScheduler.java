@@ -1,6 +1,5 @@
 package com.crud.tasks.scheduler;
 
-
 import com.crud.tasks.config.AdminConfig;
 import com.crud.tasks.domain.Mail;
 import com.crud.tasks.repository.TaskRepository;
@@ -14,18 +13,20 @@ import org.springframework.stereotype.Component;
 public class EmailScheduler {
 
     private static final String SUBJECT = "Tasks: Once a day email";
+    private static final String MESSAGE = "Currently in database you got: ";
     private final SimpleEmailService simpleEmailService;
     private final TaskRepository taskRepository;
     private final AdminConfig adminConfig;
 
-    @Scheduled(cron = "0   10 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void sendInformationEmail() {
         long size = taskRepository.count();
+
         simpleEmailService.send(
                 Mail.builder()
                         .mailTo(adminConfig.getAdminMail())
                         .subject(SUBJECT)
-                        .message("Currently in database you got: " + size + " tasks")
+                        .message(MESSAGE + size + "task" + ((size != 1) ? "s" : ""))
                         .toCc(null)
                         .build()
         );
