@@ -22,13 +22,15 @@ public class EmailScheduler {
     public void sendInformationEmail() {
         long size = taskRepository.count();
 
-        simpleEmailService.send(
-                Mail.builder()
-                        .mailTo(adminConfig.getAdminMail())
-                        .subject(SUBJECT)
-                        .message(MESSAGE + size + "task" + ((size != 1) ? "s" : ""))
-                        .toCc(null)
-                        .build()
-        );
+        final String postfix = size == 1 ? "task" : "tasks";
+        final String message = MESSAGE + size + " " + postfix;
+        Mail mail = Mail.builder()
+                .mailTo(adminConfig.getAdminMail())
+                .subject(SUBJECT)
+                .message(message)
+                .toCc(null)
+                .build();
+
+        simpleEmailService.send(mail);
     }
 }
