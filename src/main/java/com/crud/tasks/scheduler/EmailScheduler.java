@@ -18,7 +18,7 @@ public class EmailScheduler {
     private final TaskRepository taskRepository;
     private final AdminConfig adminConfig;
 
-    @Scheduled(cron = "0 0 10 * * *")
+/*    @Scheduled(cron = "0 0 10 * * *")
     public void sendInformationEmail() {
         long size = taskRepository.count();
 
@@ -32,5 +32,21 @@ public class EmailScheduler {
                 .build();
 
         simpleEmailService.send(mail);
+    }*/
+
+    @Scheduled(cron = "0 0 10 * * *")
+    public void sendNumberOfTasksInfoEmail() {
+        long size = taskRepository.count();
+
+        final String postfix = size == 1 ? "task" : "tasks";
+        final String message = MESSAGE + size + " " + postfix;
+        Mail mail = Mail.builder()
+                .mailTo(adminConfig.getAdminMail())
+                .subject(SUBJECT)
+                .message(message)
+                .toCc(null)
+                .build();
+
+        simpleEmailService.sendNumberOfTasksInfo(mail);
     }
 }
